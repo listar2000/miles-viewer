@@ -1,4 +1,4 @@
-# miles-ui: the run viewer
+# miles-viewer: the run viewer
 
 The run monitor that was `miles_ext/monitor/` in the Miles fork, now on the launcher side. It stands in for where the
 launcher will live. The fork's image only reports: this reads those reports, and it has no code in the image.
