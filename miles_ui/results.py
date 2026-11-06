@@ -93,15 +93,15 @@ def node_state(run_id: str, pushes: Pushes, run_dir: Path | None) -> dict:
     out = {}
     for name in ("run", "exit", "pool"):
         key = f"{name}:{run_id}"
-        found = [_read_json(pushes._path(run_id, key))]
+        # a results dir can hold names no node pushes under (`_probes`)
+        found = [_read_json(pushes._path(run_id, key))] if RUN_ID.fullmatch(run_id) else []
         if run_dir:
             found.append(_read_json(run_dir / "state" / f"{urllib.parse.quote(key, safe='')}.json"))
-        found = [f for f in found if f]
+        found = [f for f in found if isinstance(f, dict)]
         if found:
             out[name] = max(found, key=lambda f: f.get("heartbeat_at") or f.get("ended_at") or f.get("at") or 0)
-    if "exit" not in out and run_dir:
-        if record := _read_json(run_dir / "exit.json"):
-            out["exit"] = record
+    if "exit" not in out and run_dir and isinstance(record := _read_json(run_dir / "exit.json"), dict):
+        out["exit"] = record
     return out
 
 

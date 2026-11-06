@@ -49,6 +49,10 @@ def test_pushes_refuse_bad_names_and_non_json(tmp_path):
         p.put("run1", "run:run1", b"not json")
 
 
+def test_a_dir_name_no_node_pushes_under_reads_as_no_state(tmp_path):
+    assert Res.node_state("_probes", Res.Pushes(tmp_path), tmp_path / "_probes") == {}
+
+
 @pytest.mark.parametrize(
     "state, want",
     [
